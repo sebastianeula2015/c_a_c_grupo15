@@ -1,0 +1,29 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Producto - Nuevo{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'web/css/style_producto.css' %} ">{% endblock %}
+{% block main %}
+
+    <h2>Producto - Nuevo</h2>
+    <form method="POST" action="{% url 'producto_nuevo' %}">
+
+        <div class="container">
+            <div class="responsive-div center-aligned">
+    
+                    <div class="right-aligned-div">
+                        {% csrf_token %}
+                        <div class="form-group">
+                        {{ alta_alumno_form }}
+                    </div>
+                        <br>
+                    </div>
+    
+            </div>
+            <div class="responsive-div right-aligned">
+                <input type="submit" class="btn btn-danger button_right" value="Limpiar">
+                <input type="submit" class="btn btn-success button_right" value="Grabar">
+            </div>
+        </div>
+        
+    </form>
+{% endblock %}

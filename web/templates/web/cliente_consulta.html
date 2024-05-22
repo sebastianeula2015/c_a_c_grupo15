@@ -1,0 +1,38 @@
+{% extends "web/base.html" %}
+{% block titulo %} Cliente - Consulta {% endblock %}
+{% block extra_css %}{% endblock %}
+
+{% block main %}
+    <h2>Cliente - Consulta</h2>
+    {% if pago_al_dia %}
+        <p style="padding:15px; background-color: green; color: white;">NO DEBE DINERO</p>
+    {% else %}
+        <p style="padding:15px; background-color: red; color: white;">DEBE LA CUOTA</p>
+    {% endif %}
+   
+    <a href="{% url 'index' %}">Volver</a>
+
+    <section>
+        {% for cliente in clientes %}
+            <article>
+                <p>{{ cliente | upper }}</p>
+            </article>
+
+        {% empty %}
+            <article>
+                <p>No hay alumnos cargados</p>
+            </article>
+        {% endfor %}
+    </section>
+{% endblock %}
+<script>
+   /* $(function(){  
+    
+        $(document).ready(function(){ 
+            $('.collapse').on('show.bs.collapse',function(){
+            $('.collapse.show').collapse('toggle');
+            });
+        });
+    
+    });*/
+    </script>
