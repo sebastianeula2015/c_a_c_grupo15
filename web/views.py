@@ -10,22 +10,10 @@ import datetime
 def index(request):
     # Accedo a la BBDD a traves de los modelos
     contexto = {
-        'name': 'Alejandro',
+        'name': '',
         'fecha_hora': datetime.datetime.now()
     }
     return render(request, 'web/index.html', contexto)
-
-def cliente_consulta(request):
-
-    contexto = {
-        'clientes': [
-            'Carlos Lopez',
-            'Maria Del Cerro',
-            'Gaston Perez'
-        ],
-        'pago_al_dia': True
-    }
-    return render(request, 'web/cliente_consulta.html', contexto)
 
 def producto_consulta(request):
 
@@ -65,44 +53,61 @@ def venta_consulta(request):
 
 
  
+##########################################################################################
+def cliente_consulta(request):
+    contexto = {
+        'clientes': [
+            'Carlos Lopez',
+            'Maria Del Cerro',
+            'Gaston Perez'
+        ],
+        'pago_al_dia': True
+    }
+    return render(request, 'web/cliente_consulta.html', contexto)
 
-
+def cliente_listar(request):
+    clientes = Cliente.objects.all()
+    context = {'clientes': clientes}
+    return render(request, 'web/cliente_listar.html', context)
 def cliente_nuevo(request):
-    
-    contexto = {}
-
+    contexto = {'form': NuevoClienteForm()}
     if request.method == "GET":
-        contexto['alta_alumno_form'] = ClienteNuevoForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = ClienteNuevoForm(request.POST)
-        form = ClienteNuevoForm(request.POST)  # form needs content
-    
-        if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+        return render(request, 'web/cliente_nuevo.html', contexto)
 
+    else:  # Asumo que es un POST
+        ncliente = NuevoClienteForm(data=request.POST)
+        if ncliente.is_valid():
+            ncliente.save()
+            contexto['mensaje'] = "Cliente guardado"
+        else:
+            contexto['mensaje'] = ncliente.errors
     return render(request, 'web/cliente_nuevo.html', contexto)
 
 
-def cliente_modificacion(request):
-    
-    contexto = {}
+def cliente_modificacion(request, pk):
+    try:
+        cliente = get_object_or_404(Cliente, pk=pk)
 
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = ClienteModificacionForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = ClienteModificacionForm(request.POST)
-        form = ClienteModificacionForm(request.POST)  # form needs content
-    
-        if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+        if request.method == 'POST':
+            form = NuevoClienteForm(request.POST, instance=cliente)
+            if form.is_valid():
+                form.save()
+                mensaje_exito = "Cliente editado con éxito."
+                context = {'form': form, 'mensaje_exito': mensaje_exito}
+                return render(request, 'web/cliente_modificacion.html', context)
+        else:
+            form = NuevoClienteForm(instance=cliente)
 
-    return render(request, 'web/cliente_modificacion.html', contexto)
+        context = {'form': form}
+        return render(request, 'web/cliente_modificacion.html', context)
+
+    except Exception as e:
+        mensaje_error = f"Error al editar cliente: {e}"
+        context = {'mensaje_error': mensaje_error}
+        return render(request, 'web/cliente_modificacion.html', context)
 
 
+###########################################################################################
 def producto_nuevo(request):
     
     contexto = {}
