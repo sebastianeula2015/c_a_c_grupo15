@@ -214,7 +214,3 @@ def venta_modificacion(request):
             return redirect('index')
 
     return render(request, 'web/venta_modificacion.html', contexto)
-
-#def alumnos_por_año(request, year):
-#    alumnos = ["Carlos", "Maria", "Jose"] # """"Levanta""""" los usuarios de la BBDD
-#    return HttpResponse(f"listado de alumnos: {year} \n {alumnos}")
