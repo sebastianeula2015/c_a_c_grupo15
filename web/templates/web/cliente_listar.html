@@ -6,7 +6,7 @@
     <h1>Listado de Clientes</h1>
 
     <table class="table table-striped">
-        <thead>
+        <thead class="thead-dark">
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
@@ -25,8 +25,8 @@
                 <td>{{ cliente.telefono }}</td>
                 <td>{{ cliente.direccion }}</td>
                 <td>
-                    <a href="{% url 'cliente_modificacion' cliente.pk %}" class="btn btn-primary">Editar</a>
-                    <a href="{% url 'cliente_modificacion' cliente.pk %}" class="btn btn-primary">Compras</a>
+                    <a href="{% url 'cliente_modificacion' cliente.pk %}" class="btn btn-success">Editar</a>
+                    <a href="{% url 'cliente_eliminar' cliente.pk %}" class="btn btn-danger">Eliminar</a>
                 </td>
             </tr>
         {% endfor %}

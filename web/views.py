@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.contrib import messages
 from .forms_cliente import *
 from .forms_producto import *
 from .forms_vendedor import *
@@ -54,58 +55,44 @@ def venta_consulta(request):
 
  
 ##########################################################################################
-def cliente_consulta(request):
-    contexto = {
-        'clientes': [
-            'Carlos Lopez',
-            'Maria Del Cerro',
-            'Gaston Perez'
-        ],
-        'pago_al_dia': True
-    }
-    return render(request, 'web/cliente_consulta.html', contexto)
-
 def cliente_listar(request):
     clientes = Cliente.objects.all()
-    context = {'clientes': clientes}
-    return render(request, 'web/cliente_listar.html', context)
+    return render(request, 'web/cliente_listar.html', {'clientes': clientes})
+
+def cliente_detalles(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk)
+    return render(request, 'web/cliente_consulta.html', {'cliente': cliente})
+
 def cliente_nuevo(request):
-    contexto = {'form': NuevoClienteForm()}
-    if request.method == "GET":
-        return render(request, 'web/cliente_nuevo.html', contexto)
-
-    else:  # Asumo que es un POST
-        ncliente = NuevoClienteForm(data=request.POST)
-        if ncliente.is_valid():
-            ncliente.save()
-            contexto['mensaje'] = "Cliente guardado"
-        else:
-            contexto['mensaje'] = ncliente.errors
-    return render(request, 'web/cliente_nuevo.html', contexto)
-
+    if request.method == "POST":
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cliente creado exitosamente')
+            return redirect('cliente_listar')
+    else:
+        form = ClienteForm()
+    return render(request, 'web/cliente_nuevo.html', {'form': form})
 
 def cliente_modificacion(request, pk):
-    try:
-        cliente = get_object_or_404(Cliente, pk=pk)
+    cliente = get_object_or_404(Cliente, pk=pk)
+    if request.method == "POST":
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cliente actualizado exitosamente')
+            return redirect('cliente_listar')
+    else:
+        form = ClienteForm(instance=cliente)
+    return render(request, 'web/cliente_nuevo.html', {'form': form})
 
-        if request.method == 'POST':
-            form = NuevoClienteForm(request.POST, instance=cliente)
-            if form.is_valid():
-                form.save()
-                mensaje_exito = "Cliente editado con éxito."
-                context = {'form': form, 'mensaje_exito': mensaje_exito}
-                return render(request, 'web/cliente_modificacion.html', context)
-        else:
-            form = NuevoClienteForm(instance=cliente)
-
-        context = {'form': form}
-        return render(request, 'web/cliente_modificacion.html', context)
-
-    except Exception as e:
-        mensaje_error = f"Error al editar cliente: {e}"
-        context = {'mensaje_error': mensaje_error}
-        return render(request, 'web/cliente_modificacion.html', context)
-
+def cliente_eliminar(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk)
+    if request.method == "POST":
+        cliente.delete()
+        messages.success(request, 'Cliente eliminado exitosamente')
+        return redirect('cliente_listar')
+    return render(request, 'web/cliente_eliminar.html', {'cliente': cliente})
 
 ###########################################################################################
 def producto_nuevo(request):

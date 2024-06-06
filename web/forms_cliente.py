@@ -10,10 +10,11 @@ provincias = [
     [4, "Neuquen"],
 ]
 
-class NuevoClienteForm(forms.ModelForm):
+class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
         fields = '__all__'
+
     nombre = forms.CharField(label="Nombre", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su nombre'}))
     apellido = forms.CharField(label="Apellido", required=True,                           widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su apellido'}))
     dni = forms.IntegerField(label="DNI", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su numero de documento'}))

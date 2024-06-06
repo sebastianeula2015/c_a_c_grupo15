@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}
+{% block titulo %} Cliente - Consulta {% endblock %}
+{% block extra_css %}{% endblock %}
+
+{% block main %}
+    <h2>Eliminar Cliente</h2>
+    <p>¿Está seguro que desea eliminar a {{ cliente }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Eliminar</button>
+    </form>
+{% endblock %}
