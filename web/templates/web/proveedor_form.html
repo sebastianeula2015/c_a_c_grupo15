@@ -1,0 +1,15 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}{{ form.instance.pk|yesno:"Actualizar,Crear" }} Proveedor{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'web/css/style_proveedor.css' %}">
+{% endblock %}
+{% block main %}
+    <h1>{{ form.instance.pk|yesno:"Actualizar,Crear" }} Proveedor</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
+        <a href="{% url 'proveedor_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

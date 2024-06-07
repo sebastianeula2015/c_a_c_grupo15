@@ -44,10 +44,21 @@
 				</li>
 				<li><a href="#menuVentas" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Ventas</a>
 					<ul class="collapse list-unstyled" id="menuVentas">
-						<li><a href="{% url 'venta_nueva' %}">Nuevo</a></li>
-						<li><a href="{% url 'venta_consulta' %}">Consultar</a></li>
+						<li><a href="{% url 'venta_create' %}">Nuevo</a></li>
+						<li><a href="{% url 'venta_list' %}">Consultar</a></li>
 					</ul>
-				</li>			
+				</li>	
+                <li><a href="#menudetallesVentas" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Detalles Ventas</a>
+					<ul class="collapse list-unstyled" id="menudetallesVentas">
+						<li><a href="{% url 'detalleventa_list' %}">Lista</a></li>
+					</ul>
+				</li>	 
+                <li><a href="#menuproveedor" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Proveedores</a>
+					<ul class="collapse list-unstyled" id="menuproveedor">
+						<li><a href="{% url 'proveedor_create' %}">Nuevo</a></li>
+						<li><a href="{% url 'proveedor_list' %}">Listar</a></li>
+					</ul>
+				</li>	
 			</ul>
 			<div class="footer">
 				<p>TP - Django</p>

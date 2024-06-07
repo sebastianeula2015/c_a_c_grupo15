@@ -1,0 +1,16 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Vendedor - Nuevo{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'web/css/style_vendedor.css' %} ">{% endblock %}
+
+{% block main %}
+    <h2>Detalles del Detalle de Venta</h2>
+    <p><strong>ID:</strong> {{ detalle.id }}</p>
+    <p><strong>Producto:</strong> {{ detalle.producto }}</p>
+    <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+    <p><strong>Precio:</strong> {{ detalle.precio }}</p>
+    <a href="{% url 'detalleventa_list' %}" class="btn btn-secondary">Volver</a>
+    <a href="{% url 'detalleventa_update' detalle.id %}" class="btn btn-warning">Editar</a>
+    <a href="{% url 'detalleventa_delete' detalle.id %}" class="btn btn-danger">Eliminar</a>
+{% endblock %}

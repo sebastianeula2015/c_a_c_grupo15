@@ -20,7 +20,7 @@ class Persona(models.Model):
         abstract = True
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+        return f"{self.apellido},{self.nombre} "
 
 
 class Cliente(Persona):
@@ -31,11 +31,6 @@ class Cliente(Persona):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
-
-class Proveedor(Persona):
-    cuit = models.CharField(max_length=50)
-    def __str__(self):
-        return self.nombre
 
 
 class Vendedor(Persona):
@@ -71,3 +66,9 @@ class DetalleVenta(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} ({self.cantidad})"
+
+class Proveedor(Persona):
+    cuit = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre
+

@@ -1,0 +1,15 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Eliminar Proveedor{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'web/css/style_proveedor.css' %}">
+{% endblock %}
+{% block main %}
+    <h1>Eliminar Proveedor</h1>
+    <p>¿Estás seguro de que quieres eliminar el proveedor "{{ proveedor.nombre }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'proveedor_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

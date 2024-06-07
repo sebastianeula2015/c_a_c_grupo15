@@ -14,15 +14,15 @@ class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
         fields = '__all__'
-
-    nombre = forms.CharField(label="Nombre", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su nombre'}))
-    apellido = forms.CharField(label="Apellido", required=True,                           widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su apellido'}))
-    dni = forms.IntegerField(label="DNI", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su numero de documento'}))
-    email = forms.EmailField(label="Correo Electronico", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su correo electronico'}))
-    telefono = forms.EmailField(label="Teléfono", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Ingrese su teléfono'}))
-    provincia = forms.CharField(label="Provincia", required=True, widget=forms.TextInput(attrs={'class': "form-control ", 'placeholder': 'Provincia de pertenencia'}))
-    direccion = forms.CharField(label="Direccion", required=True, widget=forms.TextInput(attrs={'class': "form-control separador", 'placeholder': 'Direccion de facturación'}))
-
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su nombre'}),
+            'apellido': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su apellido'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su email'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su teléfono'}),
+            'dni': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su DNI'}),
+            'provincia': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su provincia'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su dirección'}),
+        }
     def clean_nombre(self):
         if not self.cleaned_data["nombre"].isalpha():
             raise ValidationError("Error en el campo nombre")
@@ -32,3 +32,15 @@ class ClienteForm(forms.ModelForm):
         if not self.cleaned_data["apellido"].isalpha():
             raise ValidationError("Error en el campo apellido")
         return self.cleaned_data["apellido"]
+
+    def clean_dni(self):
+        dni = self.cleaned_data.get('dni')
+        if Cliente.objects.filter(dni=dni).exists():
+            raise forms.ValidationError("Ya existe un cliente con este DNI.")
+        return dni
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if Cliente.objects.filter(email=email).exists():
+            raise forms.ValidationError("Ya existe un cliente con este email.")
+        return email

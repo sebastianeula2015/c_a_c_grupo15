@@ -1,0 +1,17 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Vendedor - Nuevo{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'web/css/style_vendedor.css' %} ">{% endblock %}
+
+{% block main %}
+    <h2>Detalles de la Venta</h2>
+    <p><strong>ID:</strong> {{ venta.id }}</p>
+    <p><strong>Fecha:</strong> {{ venta.fecha }}</p>
+    <p><strong>Cliente:</strong> {{ venta.cliente }}</p>
+    <p><strong>Vendedores:</strong> {{ venta.vendedores.all|join:", " }}</p>
+    <p><strong>Detalle de Venta:</strong> {{ venta.detalle_venta }}</p>
+    <a href="{% url 'venta_list' %}" class="btn btn-secondary">Volver</a>
+    <a href="{% url 'venta_update' venta.id %}" class="btn btn-warning">Editar</a>
+    <a href="{% url 'venta_delete' venta.id %}" class="btn btn-danger">Eliminar</a>
+{% endblock %}

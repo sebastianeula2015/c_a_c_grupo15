@@ -1,0 +1,25 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Detalles del Proveedor{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'web/css/style_proveedor.css' %}">
+{% endblock %}
+{% block main %}
+    <h1>Detalles del Proveedor</h1>
+    <table class="table">
+        <tr>
+            <th>ID:</th>
+            <td>{{ proveedor.id }}</td>
+        </tr>
+        <tr>
+            <th>Nombre:</th>
+            <td>{{ proveedor.nombre }}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{ proveedor.email }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'proveedor_list' %}" class="btn btn-secondary">Volver</a>
+    <a href="{% url 'proveedor_update' proveedor.id %}" class="btn btn-warning">Editar</a>
+{% endblock %}

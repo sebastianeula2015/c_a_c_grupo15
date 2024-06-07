@@ -6,6 +6,7 @@ from .forms_cliente import *
 from .forms_producto import *
 from .forms_vendedor import *
 from .forms_venta import *
+from .forms_proveedor import *
 import datetime
 
 def index(request):
@@ -39,19 +40,6 @@ def vendedor_consulta(request):
         'cuota_al_dia': True
     }
     return render(request, 'web/vendedor_consulta.html', contexto)
-
-def venta_consulta(request):
-
-    contexto = {
-        'alumnos': [
-            'Carlos Lopez',
-            'Maria Del Cerro',
-            'Gaston Perez'
-        ],
-        'cuota_al_dia': True
-    }
-    return render(request, 'web/venta_consulta.html', contexto)
-
 
  
 ##########################################################################################
@@ -167,37 +155,123 @@ def vendedor_modificacion(request):
     return render(request, 'web/vendedor_modificacion.html', contexto)
  
 
-def venta_nueva(request):
-    
-    contexto = {}
 
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = VentaNuevaForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = VentaNuevaForm(request.POST)
-        form = VentaNuevaForm(request.POST)  # form needs content
-    
+# #################################################################################################CRUD para Venta
+def venta_list(request):
+    ventas = Venta.objects.all()
+    return render(request, 'web/venta_list.html', {'ventas': ventas})
+
+def venta_detail(request, pk):
+    venta = get_object_or_404(Venta, pk=pk)
+    return render(request, 'web/venta_detail.html', {'venta': venta})
+
+def venta_create(request):
+    if request.method == "POST":
+        form = VentaForm(request.POST)
         if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Venta creada exitosamente')
+            return redirect('venta_list')
+    else:
+        form = VentaForm()
+    return render(request, 'web/venta_form.html', {'form': form})
 
-    return render(request, 'web/venta_nueva.html', contexto)
-
-
-def venta_modificacion(request):
-    
-    contexto = {}
-
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = VentaModificicacionForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = VentaModificicacionForm(request.POST)
-        form = VentaModificicacionForm(request.POST)  # form needs content
-    
+def venta_update(request, pk):
+    venta = get_object_or_404(Venta, pk=pk)
+    if request.method == "POST":
+        form = VentaForm(request.POST, instance=venta)
         if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Venta actualizada exitosamente')
+            return redirect('venta_list')
+    else:
+        form = VentaForm(instance=venta)
+    return render(request, 'web/venta_form.html', {'form': form})
 
-    return render(request, 'web/venta_modificacion.html', contexto)
+def venta_delete(request, pk):
+    venta = get_object_or_404(Venta, pk=pk)
+    if request.method == "POST":
+        venta.delete()
+        messages.success(request, 'Venta eliminada exitosamente')
+        return redirect('venta_list')
+    return render(request, 'web/venta_confirm_delete.html', {'venta': venta})
+
+# CRUD para DetalleVenta
+def detalleventa_list(request):
+    detalles = DetalleVenta.objects.all()
+    return render(request, 'web/detalleventa_list.html', {'detalles': detalles})
+
+def detalleventa_detail(request, pk):
+    detalle = get_object_or_404(DetalleVenta, pk=pk)
+    return render(request, 'web/detalleventa_detail.html', {'detalle': detalle})
+
+def detalleventa_create(request):
+    if request.method == "POST":
+        form = DetalleVentaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Detalle de venta creado exitosamente')
+            return redirect('detalleventa_list')
+    else:
+        form = DetalleVentaForm()
+    return render(request, 'web/detalleventa_form.html', {'form': form})
+
+def detalleventa_update(request, pk):
+    detalle = get_object_or_404(DetalleVenta, pk=pk)
+    if request.method == "POST":
+        form = DetalleVentaForm(request.POST, instance=detalle)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Detalle de venta actualizado exitosamente')
+            return redirect('detalleventa_list')
+    else:
+        form = DetalleVentaForm(instance=detalle)
+    return render(request, 'web/detalleventa_form.html', {'form': form})
+
+def detalleventa_delete(request, pk):
+    detalle = get_object_or_404(DetalleVenta, pk=pk)
+    if request.method == "POST":
+        detalle.delete()
+        messages.success(request, 'Detalle de venta eliminado exitosamente')
+        return redirect('detalleventa_list')
+    return render(request, 'web/detalleventa_confirm_delete.html', {'detalle': detalle})
+
+# CRUD para Proveedor
+def proveedor_list(request):
+    proveedores = Proveedor.objects.all()
+    return render(request, 'web/proveedor_list.html', {'proveedores': proveedores})
+
+def proveedor_detail(request, pk):
+    proveedor = get_object_or_404(Proveedor, pk=pk)
+    return render(request, 'web/proveedor_detail.html', {'proveedor': proveedor})
+
+def proveedor_create(request):
+    if request.method == "POST":
+        form = ProveedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Proveedor creado exitosamente')
+            return redirect('proveedor_list')
+    else:
+        form = ProveedorForm()
+    return render(request, 'web/proveedor_form.html', {'form': form})
+
+def proveedor_update(request, pk):
+    proveedor = get_object_or_404(Proveedor, pk=pk)
+    if request.method == "POST":
+        form = ProveedorForm(request.POST, instance=proveedor)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Proveedor actualizado exitosamente')
+            return redirect('proveedor_list')
+    else:
+        form = ProveedorForm(instance=proveedor)
+    return render(request, 'web/proveedor_form.html', {'form': form})
+
+def proveedor_delete(request, pk):
+    proveedor = get_object_or_404(Proveedor, pk=pk)
+    if request.method == "POST":
+        proveedor.delete()
+        messages.success(request, 'Proveedor eliminado exitosamente')
+        return redirect('proveedor_list')
+    return render(request, 'web/proveedor_confirm_delete.html', {'proveedor': proveedor})

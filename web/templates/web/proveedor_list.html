@@ -1,0 +1,34 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Lista de Proveedores{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'web/css/style_proveedor.css' %}">
+{% endblock %}
+{% block main %}
+    <h1>Lista de Proveedores</h1>
+    <a href="{% url 'proveedor_create' %}" class="btn btn-primary">Nuevo Proveedor</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for proveedor in proveedores %}
+            <tr>
+                <td>{{ proveedor.id }}</td>
+                <td>{{ proveedor.nombre }}</td>
+                <td>{{ proveedor.email }}</td>
+                <td>
+                    <a href="{% url 'proveedor_detail' proveedor.id %}" class="btn btn-info">Ver</a>
+                    <a href="{% url 'proveedor_update' proveedor.id %}" class="btn btn-warning">Editar</a>
+                    <a href="{% url 'proveedor_delete' proveedor.id %}" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

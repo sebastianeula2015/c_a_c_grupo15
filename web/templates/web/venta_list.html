@@ -1,0 +1,33 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Vendedor - Nuevo{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'web/css/style_vendedor.css' %} ">{% endblock %}
+
+{% block main %}
+  <h2>Ventas</h2>
+  <a href="{% url 'venta_create' %}" class="btn btn-primary">Nueva Venta</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Cliente</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venta in ventas %}
+        <tr>
+          <td>{{ venta.id }}</td>
+          <td>{{ venta.fecha }}</td>
+          <td>{{ venta.cliente }}</td>
+          <td>
+            <a href="{% url 'venta_detail' venta.id %}" class="btn btn-info">Ver</a>
+            <a href="{% url 'venta_update' venta.id %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'venta_delete' venta.id %}" class="btn btn-danger">Eliminar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
