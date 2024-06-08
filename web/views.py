@@ -29,20 +29,8 @@ def producto_consulta(request):
     }
     return render(request, 'web/producto_consulta.html', contexto)
 
-def vendedor_consulta(request):
-
-    contexto = {
-        'alumnos': [
-            'Carlos Lopez',
-            'Maria Del Cerro',
-            'Gaston Perez'
-        ],
-        'cuota_al_dia': True
-    }
-    return render(request, 'web/vendedor_consulta.html', contexto)
-
  
-##########################################################################################
+## CLIENTE #######################################################################################
 def cliente_listar(request):
     clientes = Cliente.objects.all()
     return render(request, 'web/cliente_listar.html', {'clientes': clientes})
@@ -82,77 +70,85 @@ def cliente_eliminar(request, pk):
         return redirect('cliente_listar')
     return render(request, 'web/cliente_eliminar.html', {'cliente': cliente})
 
-###########################################################################################
+## PRODUCTO #########################################################################################
+
+def producto_consulta(request):
+
+    productos = Producto.objects.all()
+    return render(request, 'web/producto_consulta.html', {'productos': productos})
+
 def producto_nuevo(request):
-    
-    contexto = {}
-
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = ProductoNuevoForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = ProductoNuevoForm(request.POST)
-        form = ProductoNuevoForm(request.POST)  # form needs content
-    
+    if request.method == "POST":
+        form = ProductoForm(request.POST)
         if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Producto creado exitosamente')
+            return redirect('producto_consulta')
+    else:
+        form = ProductoForm()
+    return render(request, 'web/producto_nuevo.html', {'form': form})
 
-    return render(request, 'web/producto_nuevo.html', contexto)
 
-
-def producto_modificacion(request):
-    
-    contexto = {}
-
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = ProductoModificacionForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = ProductoModificacionForm(request.POST)
-        form = ProductoModificacionForm(request.POST)  # form needs content
-    
+def producto_modificacion(request, pk):
+    producto = get_object_or_404(Producto, pk=pk)
+    if request.method == "POST":
+        form = ProductoForm(request.POST, instance=producto)
         if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Producto actualizado exitosamente')
+            return redirect('producto_consulta')
+    else:
+        form = ProductoForm(instance=producto)
 
-    return render(request, 'web/producto_modificacion.html', contexto)
+    return render(request, 'web/producto_nuevo.html', {'form': form})
 
+def producto_eliminar(request, pk):
+    producto = get_object_or_404(Producto, pk=pk)
+    if request.method == "POST":
+        producto.delete()
+        messages.success(request, 'Producto eliminado exitosamente')
+        return redirect('producto_consulta')
+    return render(request, 'web/producto_eliminar.html', {'producto': producto})
+
+## VENDEDOR ###################################################################################
+
+def vendedor_consulta(request):
+
+    vendedores = Vendedor.objects.all()
+    return render(request, 'web/vendedor_consulta.html', {'vendedores': vendedores})
 
 def vendedor_nuevo(request):
-    
-    contexto = {}
-
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = VendedorNuevoForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = VendedorNuevoForm(request.POST)
-        form = VendedorNuevoForm(request.POST)  # form needs content
-    
+    if request.method == "POST":
+        form = VendedorForm(request.POST)
         if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Cliente creado exitosamente')
+            return redirect('vendedor_consulta')
+    else:
+        form = VendedorForm()
+    return render(request, 'web/vendedor_nuevo.html', {'form': form})
 
-    return render(request, 'web/vendedor_nuevo.html', contexto)
 
-
-def vendedor_modificacion(request):
-    
-    contexto = {}
-
-    if request.method == "GET":
-        contexto['alta_alumno_form'] = VendedorModificacionForm()
-    
-    else: # Asumo que es un POST
-        contexto['alta_alumno_form'] = VendedorModificacionForm(request.POST)
-        form = VendedorModificacionForm(request.POST)  # form needs content
-    
+def vendedor_modificacion(request, pk):
+    vendedor = get_object_or_404(Vendedor, pk=pk)
+    if request.method == "POST":
+        form = VendedorForm(request.POST, instance=vendedor)
         if form.is_valid():
-            print(request.POST)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Vendedor actualizado exitosamente')
+            return redirect('vendedor_consulta')
+    else:
+        form = VendedorForm(instance=vendedor)
 
-    return render(request, 'web/vendedor_modificacion.html', contexto)
+    return render(request, 'web/vendedor_nuevo.html', {'form': form})
+
+def vendedor_eliminar(request, pk):
+    vendedor = get_object_or_404(Vendedor, pk=pk)
+    if request.method == "POST":
+        vendedor.delete()
+        messages.success(request, 'Vendedor eliminado exitosamente')
+        return redirect('vendedor_consulta')
+    return render(request, 'web/vendedor_eliminar.html', {'vendedor': vendedor})
  
 
 

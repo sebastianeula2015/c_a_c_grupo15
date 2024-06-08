@@ -10,13 +10,15 @@ urlpatterns = [
     path('cliente_detalles/<int:pk>/', views.cliente_detalles, name='cliente_detalles'),
     path('cliente_listar', views.cliente_listar, name='cliente_listar'),
 
-    path('producto_consulta', views.producto_consulta, name='producto_consulta'),
     path('producto_nuevo', views.producto_nuevo, name='producto_nuevo'),
-    path('producto_modificacion', views.producto_modificacion, name='producto_modificacion'),
+    path('producto_modificacion/<int:pk>/', views.producto_modificacion, name='producto_modificacion'),
+    path('producto_eliminar/<int:pk>/', views.producto_eliminar, name='producto_eliminar'),
+    path('producto_consulta', views.producto_consulta, name='producto_consulta'),
 
-    path('vendedor_consulta', views.vendedor_consulta, name='vendedor_consulta'),
     path('vendedor_nuevo', views.vendedor_nuevo, name='vendedor_nuevo'),
-    path('vendedor_modificacion', views.vendedor_modificacion, name='vendedor_modificacion'),
+    path('vendedor_modificacion/<int:pk>/', views.vendedor_modificacion, name='vendedor_modificacion'),
+    path('vendedor_eliminar/<int:pk>/', views.vendedor_eliminar, name='vendedor_eliminar'),
+    path('vendedor_consulta', views.vendedor_consulta, name='vendedor_consulta'),
 
     path('ventas/', views.venta_list, name='venta_list'),
     path('ventas/<int:pk>/', views.venta_detail, name='venta_detail'),

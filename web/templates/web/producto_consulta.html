@@ -1,16 +1,40 @@
 {% extends "web/base.html" %}
-{% block titulo %} Producto - Consulta {% endblock %}
+{% block titulo %} Productos - Consulta {% endblock %}
 {% block extra_css %}{% endblock %}
+
 {% block main %}
-    <h2>Producto - Consulta</h2>
+    <h1>Listado de Productos</h1>
 
-    <a href="{% url 'index' %}">Volver</a>
-
-    <section>
-
-            <article>
-                <p>productos consulta</p>
-            </article>
-
-    </section>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Proveedor</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if productos %}
+            {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.precio }}</td>
+                    <td>{{ producto.proveedor }}</td>
+                    <td>
+                        <a href="{% url 'producto_modificacion' producto.pk %}" class="btn btn-success">Editar</a>
+                        <a href="{% url 'producto_eliminar' producto.pk %}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No hay productos disponibles</td>
+            </tr>
+        {% endif %}
+        
+        </tbody>
+    </table>
 {% endblock %}

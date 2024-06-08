@@ -31,13 +31,10 @@ class Cliente(Persona):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
-
-
 class Vendedor(Persona):
     nro_vendedor = models.IntegerField(default=0)
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
-
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=255)

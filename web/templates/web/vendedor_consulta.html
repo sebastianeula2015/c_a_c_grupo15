@@ -1,17 +1,44 @@
 {% extends "web/base.html" %}
-
-{% block titulo %} Vendedor - Consulta {% endblock %}
-
+{% block titulo %} Vendedores - Consulta {% endblock %}
 {% block extra_css %}{% endblock %}
 
 {% block main %}
-    <h2>Vendedor - Consulta</h2>
+    <h1>Listado de Vendedores</h1>
 
-    <a href="{% url 'index' %}">Volver</a>
-
-    <section>
-            <article>
-                <p>Vendedor consulta</p>
-            </article>
-     </section>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Nro Vendedor</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if vendedores %}
+            {% for vendedor in vendedores %}
+                <tr>
+                    <td>{{ vendedor.nro_vendedor }}</td>
+                    <td>{{ vendedor.nombre }}</td>
+                    <td>{{ vendedor.apellido }}</td>
+                    <td>{{ vendedor.email }}</td>
+                    <td>{{ vendedor.telefono }}</td>
+                    <td>{{ vendedor.direccion }}</td>
+                    <td>
+                        <a href="{% url 'vendedor_modificacion' vendedor.pk %}" class="btn btn-success">Editar</a>
+                        <a href="{% url 'vendedor_eliminar' vendedor.pk %}" class="btn btn-danger">Eliminar</a>                   
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No hay vendedores disponibles</td>
+            </tr>
+        {% endif %}
+        
+        </tbody>
+    </table>
 {% endblock %}
