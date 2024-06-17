@@ -50,20 +50,29 @@ class Venta(models.Model):
     fecha = models.DateField()
     cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE)
     vendedores = models.ManyToManyField('Vendedor')
-    detalle_venta = models.ForeignKey('DetalleVenta', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Venta del {self.fecha} para {self.cliente}"
 
 
 class DetalleVenta(models.Model):
-    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    venta = models.ForeignKey(Venta, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f"{self.producto.nombre} ({self.cantidad})"
 
+    def save(self, *args, **kwargs):
+        # Calcular precio total antes de guardar
+        if self.cantidad and self.precio:
+            self.precio_total = self.cantidad * self.precio
+
+        super().save(*args, **kwargs)
+
+    
 class Proveedor(Persona):
     cuit = models.CharField(max_length=50)
     def __str__(self):

@@ -1,0 +1,10 @@
+{% extends "web/base.html" %}
+{% block titulo %}Venta Mensaje{% endblock %}
+{% block main %}
+<div class="container">
+    <h1>¡Venta exitosa!</h1>
+    <p>El número de la venta es: {{ venta.id }}</p>
+    <p>Fecha de la venta: {{ venta.fecha }}</p>
+    <!-- Otras informaciones de la venta que desees mostrar -->
+</div>
+{% endblock %}

@@ -9,7 +9,12 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="{% static 'web/css/style.css' %} ">
 	<link rel="stylesheet" href="{% static 'web/css/bootstrap.min.css' %} ">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="{% static 'web/js/popper.js' %} "></script>
+	<script src="{% static 'web/js/bootstrap.min.js' %} "></script>
+	<script src="{% static 'web/js/main.js' %} "></script>	
 	{% block extra_css %}{% endblock %}
+	{% block extra_js %}{% endblock %}
 </head>
 <body>
 <div class="wrapper d-flex align-items-stretch">
@@ -71,14 +76,11 @@
 	</div>
 </div>
 
-<script src="{% static 'web/js/jquery.min.js' %} "></script>
-<script src="{% static 'web/js/popper.js' %} "></script>
-<script src="{% static 'web/js/bootstrap.min.js' %} "></script>
-<script src="{% static 'web/js/main.js' %} "></script>
+
 
 </body>
 <script>
-	$(function(){  
+$(function(){  
 	
 		$(document).ready(function(){ 
 			$('.collapse').on('show.bs.collapse',function(){
@@ -87,5 +89,6 @@
 		});
 	
 	});
-	</script>
+</script>
+{% block extra_js_fin_html %}{% endblock %}	
 </html>

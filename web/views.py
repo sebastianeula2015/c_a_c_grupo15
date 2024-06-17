@@ -8,6 +8,13 @@ from .forms_vendedor import *
 from .forms_venta import *
 from .forms_proveedor import *
 import datetime
+from django.http import JsonResponse
+from django.forms import formset_factory
+from django.db import transaction
+from .models import Venta, DetalleVenta
+import logging
+from django.http import HttpResponseServerError
+logger = logging.getLogger(__name__)
 
 def index(request):
     # Accedo a la BBDD a traves de los modelos
@@ -110,6 +117,17 @@ def producto_eliminar(request, pk):
         return redirect('producto_consulta')
     return render(request, 'web/producto_eliminar.html', {'producto': producto})
 
+def get_precio_producto(request):
+    producto_id = request.GET.get('producto_id')
+    if producto_id:
+        try:
+            producto = Producto.objects.get(pk=producto_id)
+            data = {'precio': producto.precio}
+        except Producto.DoesNotExist:
+            data = {'error': 'Producto no encontrado'}
+    else:
+        data = {'error': 'ID de producto no proporcionado'}
+    return JsonResponse(data)
 ## VENDEDOR ###################################################################################
 
 def vendedor_consulta(request):
@@ -161,16 +179,57 @@ def venta_detail(request, pk):
     venta = get_object_or_404(Venta, pk=pk)
     return render(request, 'web/venta_detail.html', {'venta': venta})
 
+def venta_mensaje(request, venta_id):
+    venta = Venta.objects.get(pk=venta_id)
+    context = {
+        'venta_id': venta_id,
+        'venta': venta,
+    }
+    return render(request, 'web/venta_mensaje.html', context)
+
+########
 def venta_create(request):
-    if request.method == "POST":
-        form = VentaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Venta creada exitosamente')
-            return redirect('venta_list')
+    if request.method == 'POST':
+        venta_form = VentaForm(request.POST)
+        detalle_venta_formset = DetalleVentaFormSet(request.POST)
+
+        flagProductoObligatorio1 = False
+
+        if venta_form.is_valid() and detalle_venta_formset.is_valid():
+
+            if detalle_venta_formset.is_valid():  # Validate the formset
+                for form in detalle_venta_formset:
+                    if form.cleaned_data.get('producto') is not None and form.cleaned_data.get('precio') is not None and form.cleaned_data.get('cantidad') is not None:
+                        venta = venta_form.save()
+                        detalle_venta = form.save(commit=False)
+                        detalle_venta.venta = venta
+                        detalle_venta.precio_total = detalle_venta.cantidad * detalle_venta.precio  # Update precio_total here
+                        detalle_venta.save()
+                        flagProductoObligatorio1 = True
+                        print("grabando")
+                    else:
+                        if form.cleaned_data.get('producto') is None and flagProductoObligatorio1 == False:
+                            error_message = "Error en el formulario de detalle de venta. Por favor, revise los campos."
+                            context = {'venta_form': venta_form, 'detalle_venta_formset': detalle_venta_formset, 'error_message': error_message}                            
+                            return render(request, 'web/venta_form.html', context)
+                        else:
+                            return redirect('venta_mensaje', venta_id=venta.pk)
+            else:
+                error_message = "Error en el formulario de detalle de venta. Por favor, revise los campos."
+                context = {'venta_form': venta_form, 'detalle_venta_formset': detalle_venta_formset, 'error_message': error_message}
+        else:
+            error_message = "Error, Detalle de Venta. Si selecciona un producto, completo el resto de los campos"
+            context = {'venta_form': venta_form, 'detalle_venta_formset': detalle_venta_formset, 'error_message': error_message}
+            return render(request, 'web/venta_form.html', context)
     else:
-        form = VentaForm()
-    return render(request, 'web/venta_form.html', {'form': form})
+        venta_form = VentaForm()
+        detalle_venta_formset = DetalleVentaFormSet()
+
+    return render(request, 'web/venta_form.html', {
+        'venta_form': venta_form,
+        'detalle_venta_formset': detalle_venta_formset,
+    })
+################
 
 def venta_update(request, pk):
     venta = get_object_or_404(Venta, pk=pk)
