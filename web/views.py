@@ -1,7 +1,10 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.views.generic import View
+
 from .forms_cliente import *
 from .forms_producto import *
 from .forms_vendedor import *
@@ -271,3 +274,17 @@ def proveedor_delete(request, pk):
         messages.success(request, 'Proveedor eliminado exitosamente')
         return redirect('proveedor_list')
     return render(request, 'web/proveedor_confirm_delete.html', {'proveedor': proveedor})
+
+
+class RegistroView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, 'usuarios/registro.html', {'form': form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+        return render(request, 'usuarios/registro.html', {'form': form})

@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'VentasWeb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cursodjango',
+        'NAME': 'cursodjango2',
         'USER': 'postgres',
         'PASSWORD': '882311',
         'HOST': 'localhost',
@@ -126,3 +126,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'

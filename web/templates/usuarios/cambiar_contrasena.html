@@ -1,0 +1,14 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}Cambio Contraseña{% endblock %}
+{% block extra_css %}
+    
+{% endblock %}
+{% block main %}
+    <h2>Cambiar Contraseña</h2>    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+    </form>
+{% endblock %}

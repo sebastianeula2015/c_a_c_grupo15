@@ -1,0 +1,15 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block titulo %}FORMULARIO DE REGISTRO DE USUARIOS{% endblock %}
+{% block extra_css %}
+    
+{% endblock %}
+{% block main %}
+<h2>Formulario de registro de usuarios</h2>
+    <h2>Registro</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </form>
+{% endblock %}

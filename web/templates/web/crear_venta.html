@@ -1,0 +1,18 @@
+{% extends "web/base.html" %}
+
+{% block main %}
+<h2>Crear Venta</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ venta_form.as_p }}
+    {{ detalle_venta_formset.management_form }}
+    <h3>Productos</h3>
+    {% for form in detalle_venta_formset %}
+        <div class="detalle-form">
+            {{ form.as_p }}
+        </div>
+    {% endfor %}
+    <button type="submit">Guardar</button>
+</form>
+<a href="{% url 'listar_ventas' %}">Cancelar</a>
+{% endblock %}

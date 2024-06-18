@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from . import views
-
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -37,5 +37,24 @@ urlpatterns = [
     path('proveedores/nuevo/', views.proveedor_create, name='proveedor_create'),
     path('proveedores/<int:pk>/editar/', views.proveedor_update, name='proveedor_update'),
     path('proveedores/<int:pk>/eliminar/', views.proveedor_delete, name='proveedor_delete'),
+
+    path('registro/', views.RegistroView.as_view(), name='registro'),
+    path('login/', auth_views.LoginView.as_view(template_name='usuarios/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('cambiar_contrasena/',
+         auth_views.PasswordChangeView.as_view(template_name='usuarios/cambiar_contrasena.html', success_url='/'),
+         name='cambiar_contrasena'),
+    path('resetear_contrasena/',
+         auth_views.PasswordResetView.as_view(template_name='usuarios/resetear_contrasena.html'),
+         name='resetear_contrasena'),
+    path('resetear_contrasena/done/',
+         auth_views.PasswordResetDoneView.as_view(template_name='usuarios/resetear_contrasena_done.html'),
+         name='password_reset_done'),
+    path('resetear_contrasena/confirm/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name='usuarios/resetear_contrasena_confirm.html'),
+         name='password_reset_confirm'),
+    path('resetear_contrasena/complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='usuarios/resetear_contrasena_complete.html'),
+         name='password_reset_complete'),
 
 ]
