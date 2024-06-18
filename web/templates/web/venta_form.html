@@ -1,15 +1,133 @@
 {% extends "web/base.html" %}
 {% load static %}
-{% block titulo %}Vendedor - Nuevo{% endblock %}
+
+{% block titulo %}Crear Nueva Venta{% endblock %}
+
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'web/css/style_vendedor.css' %} ">{% endblock %}
+<link rel="stylesheet" href="{% static 'web/css/style_vendedor.css' %}">
+{% endblock %}
 
 {% block main %}
-    <h2>{% if form.instance.pk %}Editar Venta{% else %}Nueva Venta{% endif %}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Crear</button>
-    </form>
-    <a href="{% url 'venta_list' %}" class="btn btn-secondary mt-3">Volver</a>
+<div class="container">
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <h2>Datos de Venta</h2>
+      {{ venta_form.as_p }}
+    </div>
+    {% if error_message %}
+    <div class="alert alert-danger">
+        {{ error_message }}
+    </div>
+    {% endif %}
+    <div class="form-group">
+      <h2>Detalles de Venta</h2>
+      {{ detalle_venta_formset.management_form }}
+      <div id="formset">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Precio Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for form in detalle_venta_formset %}
+            <tr>
+              <td>{{ form.producto }}</td>
+              <td>{{ form.precio }}</td>
+              <td>{{ form.cantidad }}</td>
+              <td>{{ form.precio_total }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="form-group">
+        <label>Importe Total de Venta:</label>
+        <span id="importe-total">0</span>
+      </div>      
+    </div>
+
+    <button type="submit" class="btn btn-primary">Finalizar Venta</button>
+  </form>
+</div>
+
+{% endblock %}
+{% block extra_js_fin_html %}
+
+<script>
+    $(document).ready(function() {
+        $('select[name$="producto"]').change(function() {
+          var selectElement = $(this);
+          var productoId = selectElement.val();
+      
+          $.ajax({
+            type: 'GET',
+            url: '{% url "get_precio_producto" %}',
+            data: {
+              producto_id: productoId
+            },
+            success: function(data) {
+              console.log(data);
+              selectElement
+               .closest('tr')
+               .find('input[name$="precio"]')
+               .val(data.precio);
+      
+              // Recalculate the total when the product is changed
+              var cantidad = selectElement.closest('tr').find('input[name$="cantidad"]').val();
+              var precio = data.precio;
+      
+              if (cantidad && precio) {
+                var precioTotal = cantidad * precio;
+                selectElement.closest('tr').find('input[name$="precio_total"]').val(precioTotal);
+              } else {
+                selectElement.closest('tr').find('input[name$="precio_total"]').val(0);
+              }
+      
+              // Calculate the total
+              var total = 0;
+              $('input[name$="precio_total"]').each(function() {
+                var valor = parseFloat($(this).val());
+                if (!isNaN(valor)) {
+                  total += valor;
+                } else {
+                  total += 0; // If the field is empty or not a number, add 0 to the total
+                }
+              });
+              $('#importe-total').text(total.toFixed(2));
+            }
+          });
+        });
+      
+        $('input[name$="cantidad"]').on('input', function() {
+          var cantidad = $(this).val();
+          var precio = $(this).closest('tr').find('input[name$="precio"]').val();
+      
+          if (cantidad && precio) {
+            var precioTotal = cantidad * precio;
+            $(this).closest('tr').find('input[name$="precio_total"]').val(precioTotal);
+          } else {
+            $(this).closest('tr').find('input[name$="precio_total"]').val(0);
+          }
+      
+          // Calculate the total
+          var total = 0;
+          $('input[name$="precio_total"]').each(function() {
+            var valor = parseFloat($(this).val());
+            if (!isNaN(valor)) {
+              total += valor;
+            } else {
+              total += 0; // If the field is empty or not a number, add 0 to the total
+            }
+          });
+          $('#importe-total').text(total.toFixed(2));
+        });
+      });
+</script>
+
 {% endblock %}
