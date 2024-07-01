@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
@@ -19,6 +20,7 @@ import logging
 from django.http import HttpResponseServerError
 logger = logging.getLogger(__name__)
 
+@login_required(login_url='login')
 def index(request):
     # Accedo a la BBDD a traves de los modelos
     contexto = {
@@ -27,6 +29,8 @@ def index(request):
     }
     return render(request, 'web/index.html', contexto)
 
+@login_required(login_url='login')
+@permission_required
 def producto_consulta(request):
 
     contexto = {
@@ -41,14 +45,18 @@ def producto_consulta(request):
 
  
 ## CLIENTE #######################################################################################
+@login_required(login_url='login')
 def cliente_listar(request):
     clientes = Cliente.objects.all()
     return render(request, 'web/cliente_listar.html', {'clientes': clientes})
 
+
+@login_required(login_url='login')
 def cliente_detalles(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     return render(request, 'web/cliente_consulta.html', {'cliente': cliente})
 
+@login_required(login_url='login')
 def cliente_nuevo(request):
     if request.method == "POST":
         form = ClienteForm(request.POST)
@@ -60,6 +68,8 @@ def cliente_nuevo(request):
         form = ClienteForm()
     return render(request, 'web/cliente_nuevo.html', {'form': form})
 
+
+@login_required(login_url='login')
 def cliente_modificacion(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     if request.method == "POST":
@@ -72,6 +82,7 @@ def cliente_modificacion(request, pk):
         form = ClienteForm(instance=cliente)
     return render(request, 'web/cliente_nuevo.html', {'form': form})
 
+@login_required(login_url='login')
 def cliente_eliminar(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     if request.method == "POST":
@@ -82,11 +93,15 @@ def cliente_eliminar(request, pk):
 
 ## PRODUCTO #########################################################################################
 
+
+@login_required(login_url='login')
 def producto_consulta(request):
 
     productos = Producto.objects.all()
     return render(request, 'web/producto_consulta.html', {'productos': productos})
 
+
+@login_required(login_url='login')
 def producto_nuevo(request):
     if request.method == "POST":
         form = ProductoForm(request.POST)
@@ -99,6 +114,7 @@ def producto_nuevo(request):
     return render(request, 'web/producto_nuevo.html', {'form': form})
 
 
+@login_required(login_url='login')
 def producto_modificacion(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     if request.method == "POST":
@@ -112,6 +128,7 @@ def producto_modificacion(request, pk):
 
     return render(request, 'web/producto_nuevo.html', {'form': form})
 
+@login_required(login_url='login')
 def producto_eliminar(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     if request.method == "POST":
@@ -120,6 +137,7 @@ def producto_eliminar(request, pk):
         return redirect('producto_consulta')
     return render(request, 'web/producto_eliminar.html', {'producto': producto})
 
+@login_required(login_url='login')
 def get_precio_producto(request):
     producto_id = request.GET.get('producto_id')
     if producto_id:
@@ -133,11 +151,14 @@ def get_precio_producto(request):
     return JsonResponse(data)
 ## VENDEDOR ###################################################################################
 
+
+@login_required(login_url='login')
 def vendedor_consulta(request):
 
     vendedores = Vendedor.objects.all()
     return render(request, 'web/vendedor_consulta.html', {'vendedores': vendedores})
 
+@login_required(login_url='login')
 def vendedor_nuevo(request):
     if request.method == "POST":
         form = VendedorForm(request.POST)
@@ -149,7 +170,7 @@ def vendedor_nuevo(request):
         form = VendedorForm()
     return render(request, 'web/vendedor_nuevo.html', {'form': form})
 
-
+@login_required(login_url='login')
 def vendedor_modificacion(request, pk):
     vendedor = get_object_or_404(Vendedor, pk=pk)
     if request.method == "POST":
@@ -163,6 +184,7 @@ def vendedor_modificacion(request, pk):
 
     return render(request, 'web/vendedor_nuevo.html', {'form': form})
 
+@login_required(login_url='login')
 def vendedor_eliminar(request, pk):
     vendedor = get_object_or_404(Vendedor, pk=pk)
     if request.method == "POST":
@@ -174,14 +196,17 @@ def vendedor_eliminar(request, pk):
 
 
 # #################################################################################################CRUD para Venta
+@login_required(login_url='login')
 def venta_list(request):
     ventas = Venta.objects.all()
     return render(request, 'web/venta_list.html', {'ventas': ventas})
 
+@login_required(login_url='login')
 def venta_detail(request, pk):
     venta = get_object_or_404(Venta, pk=pk)
     return render(request, 'web/venta_detail.html', {'venta': venta})
 
+@login_required(login_url='login')
 def venta_mensaje(request, venta_id):
     venta = Venta.objects.get(pk=venta_id)
     context = {
@@ -191,6 +216,7 @@ def venta_mensaje(request, venta_id):
     return render(request, 'web/venta_mensaje.html', context)
 
 ########
+@login_required(login_url='login')
 def venta_create(request):
     if request.method == 'POST':
         venta_form = VentaForm(request.POST)
@@ -234,6 +260,7 @@ def venta_create(request):
     })
 ################
 
+@login_required(login_url='login')
 def venta_update(request, pk):
     venta = get_object_or_404(Venta, pk=pk)
     if request.method == "POST":
@@ -246,6 +273,7 @@ def venta_update(request, pk):
         form = VentaForm(instance=venta)
     return render(request, 'web/venta_form.html', {'form': form})
 
+@login_required(login_url='login')
 def venta_delete(request, pk):
     venta = get_object_or_404(Venta, pk=pk)
     if request.method == "POST":
@@ -255,14 +283,17 @@ def venta_delete(request, pk):
     return render(request, 'web/venta_confirm_delete.html', {'venta': venta})
 
 # CRUD para DetalleVenta
+@login_required(login_url='login')
 def detalleventa_list(request):
     detalles = DetalleVenta.objects.all()
     return render(request, 'web/detalleventa_list.html', {'detalles': detalles})
 
+@login_required(login_url='login')
 def detalleventa_detail(request, pk):
     detalle = get_object_or_404(DetalleVenta, pk=pk)
     return render(request, 'web/detalleventa_detail.html', {'detalle': detalle})
 
+@login_required(login_url='login')
 def detalleventa_create(request):
     if request.method == "POST":
         form = DetalleVentaForm(request.POST)
@@ -274,6 +305,7 @@ def detalleventa_create(request):
         form = DetalleVentaForm()
     return render(request, 'web/detalleventa_form.html', {'form': form})
 
+@login_required(login_url='login')
 def detalleventa_update(request, pk):
     detalle = get_object_or_404(DetalleVenta, pk=pk)
     if request.method == "POST":
@@ -286,6 +318,7 @@ def detalleventa_update(request, pk):
         form = DetalleVentaForm(instance=detalle)
     return render(request, 'web/detalleventa_form.html', {'form': form})
 
+@login_required(login_url='login')
 def detalleventa_delete(request, pk):
     detalle = get_object_or_404(DetalleVenta, pk=pk)
     if request.method == "POST":
@@ -295,14 +328,17 @@ def detalleventa_delete(request, pk):
     return render(request, 'web/detalleventa_confirm_delete.html', {'detalle': detalle})
 
 # CRUD para Proveedor
+@login_required(login_url='login')
 def proveedor_list(request):
     proveedores = Proveedor.objects.all()
     return render(request, 'web/proveedor_list.html', {'proveedores': proveedores})
 
+@login_required(login_url='login')
 def proveedor_detail(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     return render(request, 'web/proveedor_detail.html', {'proveedor': proveedor})
 
+@login_required(login_url='login')
 def proveedor_create(request):
     if request.method == "POST":
         form = ProveedorForm(request.POST)
@@ -314,6 +350,7 @@ def proveedor_create(request):
         form = ProveedorForm()
     return render(request, 'web/proveedor_form.html', {'form': form})
 
+@login_required(login_url='login')
 def proveedor_update(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     if request.method == "POST":
@@ -326,6 +363,8 @@ def proveedor_update(request, pk):
         form = ProveedorForm(instance=proveedor)
     return render(request, 'web/proveedor_form.html', {'form': form})
 
+@login_required(login_url='login')
+@permission_required('web.add_proveedor', raise_exception=True)
 def proveedor_delete(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     if request.method == "POST":
