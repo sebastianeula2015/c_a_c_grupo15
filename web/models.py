@@ -31,10 +31,13 @@ class Cliente(Persona):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
+
 class Vendedor(Persona):
     nro_vendedor = models.IntegerField(default=0)
+
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
+
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=255)
@@ -72,9 +75,10 @@ class DetalleVenta(models.Model):
 
         super().save(*args, **kwargs)
 
-    
+
 class Proveedor(Persona):
     cuit = models.CharField(max_length=50)
+    #razon_social = models.CharField(max_length=60)
+
     def __str__(self):
         return self.nombre
-

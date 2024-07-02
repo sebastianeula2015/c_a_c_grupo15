@@ -57,6 +57,7 @@ def cliente_detalles(request, pk):
     return render(request, 'web/cliente_consulta.html', {'cliente': cliente})
 
 @login_required(login_url='login')
+@permission_required('web.add_cliente', raise_exception=True)
 def cliente_nuevo(request):
     if request.method == "POST":
         form = ClienteForm(request.POST)

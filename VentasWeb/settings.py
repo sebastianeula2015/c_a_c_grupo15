@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'VentasWeb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cursodjango2',
+        'NAME': 'cursodjango3',
         'USER': 'postgres',
         'PASSWORD': '882311',
         'HOST': 'localhost',

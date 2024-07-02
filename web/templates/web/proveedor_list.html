@@ -25,9 +25,8 @@
                 <td>
                     <a href="{% url 'proveedor_detail' proveedor.id %}" class="btn btn-info">Ver</a>
                     <a href="{% url 'proveedor_update' proveedor.id %}" class="btn btn-warning">Editar</a>
-                    {% if user.has_perm('web.delete_proveedor') %} 
-                        <a href="{% url 'proveedor_delete' proveedor.id %}" class="btn btn-danger">Eliminar</a>
-                    {% endif %}
+                    <a href="{% url 'proveedor_delete' proveedor.id %}" class="btn btn-danger">Eliminar</a>
+                   
                 </td>
             </tr>
             {% endfor %}
